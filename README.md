@@ -10,7 +10,7 @@ This is a battleship game I wrote using Java while learning OOP. And here's a ca
 </p>
 
 ## Where
-You can play it [here](https://replit.com/join/leyswajj-hannz88), which is a link to the replit site where I uploaded my code or you could download the src file and compile it.
+You can play it [here](https://repl.it/@hannz88/BattleshipGameJava?v=1), which is a link to the replit site where I uploaded my code or you could download the src file and compile it.
 
 ## How to play
 ### 1. Read the instructions
