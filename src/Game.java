@@ -1,5 +1,6 @@
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -13,14 +14,18 @@ public class Game {
     private Board machineBoardForPlayer = new Board();  // keeps track of the player's attack on the machine - for player
     private Board playerBoardForMachine = new Board();  // keeps track of machine's attack on the player - for machine
     private DisplayBoard display = new DisplayBoard(this.boardLength, this.boardLength);
-    private int[] shipSize = {2,2,3,4,5};  // the array of ship sizes
-    private int playerShipCompartmentLeft = IntStream.of(shipSize).sum();
-    private int machineShipCompartmentLeft = IntStream.of(shipSize).sum();
+//    private int[] shipSize = {2,2,3,4,5};  // the array of ship sizes
+//    private int playerShipCompartmentLeft = IntStream.of(shipSize).sum();
+//    private int machineShipCompartmentLeft = IntStream.of(shipSize).sum();
+    private List<Integer> shipSize = new ArrayList<Integer>();
+    private long playerShipCompartmentLeft;
+    private long machineShipCompartmentLeft;
     private String turn;
 
     public Game(Scanner sc){
         // Welcome
         System.out.println("Welcome to the Battleship game!");
+        this.normShipSizes();
         // instructions
         this.gameInstruction(sc);
         // ask player for a symbol
@@ -44,16 +49,17 @@ public class Game {
 
     public void gameInstruction(Scanner sc){
         // to print out the instructions and ask player to press any letter to continue
-        String s0 = String.format("Here's the instructions:\nThere are %d ships in total. ", shipSize.length);
-        String s0_5 = String.format("The individual ship sizes are: " + Arrays.toString(shipSize));
-        String s1 = String.format(s0 + s0_5 + ". Press y to continue.");
-        String s2 = String.format("The goal is to sink all %d ships of the opponent by guessing where their ships are located at. Press y to continue.", shipSize.length);
+        String s0 = String.format("Would you like to read the instructions? Press y to continue, else enter ex to skip: ");
+        String s0_1 = String.format("There are %d ships in total. ", shipSize.size());
+        String s0_5 = String.format("The individual ship sizes are: " + shipSize.toString());
+        String s1 = String.format(s0_1 + s0_5 + ". Press y to continue.");
+        String s2 = String.format("The goal is to sink all %d ships of the opponent by guessing where their ships are located at. Press y to continue.", shipSize.size());
         String s3 = "You will be ask to set your own ships first. You will be asked to provide the row and column coordinate" +
                 " of the head of the ship.\nYou will also be asked if you want the ship to be set vertically or horizontally. Press y to continue.";
         String s4 = "Then during game play, you'll be asked to provide the row, column coordinate of the opponent board you want to hit. Press y to continue.";
         String s5 = "Do you understand the instructions? Press y to continue.";
         String s6 = "Have fun!";
-        String[] array = {s1, s2,s3, s4, s5, s6};
+        String[] array = {s0, s1, s2,s3, s4, s5, s6};
         int i = 0;
         do {
             System.out.println(array[i]);
@@ -64,12 +70,36 @@ public class Game {
                     System.out.println(array[i]);
                     break;
                 }
+            } else if (tmp.equals("lite")) {
+                this.lite();
+                break;
             } else if (tmp.equals("ex")){  //  an escape clause
                 break;
             } else {
                 System.out.println("Input not recognised.");
             }
         } while (true);
+    }
+
+    public void normShipSizes(){
+        Integer[] array = {2,2,3,4,5};
+        for(Integer num: array){
+            this.shipSize.add(num);
+        }
+        this.playerShipCompartmentLeft = shipSize.stream().mapToLong(Integer::longValue).sum();
+        this.machineShipCompartmentLeft = shipSize.stream().mapToLong(Integer::longValue).sum();
+    }
+
+    public void lite(){
+        // make a lite version of the game
+        this.shipSize.clear();
+        this.shipSize.add(2);
+        this.shipSize.add(3);
+        this.playerShipCompartmentLeft = shipSize.stream().mapToLong(Integer::longValue).sum();
+        this.machineShipCompartmentLeft = shipSize.stream().mapToLong(Integer::longValue).sum();
+        String s1 = String.format("There are %d ships in total. ", shipSize.size());
+        String s2 = String.format("The individual ship sizes are: " + shipSize.toString() + ".");
+        System.out.println(s1 + s2);
     }
 
     public void gameRecap(){
@@ -106,6 +136,7 @@ public class Game {
     }
 
     public void askMachineSymbol(String symbol){
+        // get machine to create a symbol
         machine = new Machine(symbol, this.boardLength);
     }
 
