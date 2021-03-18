@@ -1,9 +1,9 @@
-# Battleship Game
+# Battleship Game Java
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
 
 ## Introduction
-This is a battleship game I wrote using Java while learning OOP. And here's a cat gif on ship (well... paperboat), because I promised there'll be a cat gif. 
+This is a battleship game I wrote using Java while learning OOP. And here's a cat gif on ship (well... paperboat), because I promised there'll be cat gif(s). 
 
 <p align="center">
     <img src="https://github.com/hannz88/Battleship_Game_Java/blob/main/Images/cat.gif" alt="Gif of cat on paperboat">
