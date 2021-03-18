@@ -123,4 +123,14 @@ public class Board {
     public void boardSetMissed(int x, int y){
         board[x][y].setMissed();
     }
+
+    public String boardGetBombedSymbol(){
+        // get the symbol
+        return board[0][0].getBombedSymbol();
+    }
+
+    public String boardGetMissedSymbol(){
+        // return the Missed Symbol
+        return board[0][0].getMissedSymbol();
+    }
 }

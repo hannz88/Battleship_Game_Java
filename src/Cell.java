@@ -5,10 +5,22 @@ public class Cell {
     private static final String ansiReset = "\u001B[0m";
     private static final String ansiRed = "\u001B[31m";
     private static final String ansiGreen = "\u001B[32m";
+    private String bombedSymbol = ansiRed + "X" + ansiReset;
+    private String missedSymbol = ansiGreen + "O" + ansiReset;
 
     public void setBombed() {
         this.isBombed = true;
-        this.symbol = ansiRed + "X" + ansiReset;
+        this.symbol = bombedSymbol;
+    }
+
+    public String getBombedSymbol(){
+        // get the symbol
+        return bombedSymbol;
+    }
+
+    public String getMissedSymbol(){
+        // return the Missed Symbol
+        return missedSymbol;
     }
 
     public void setOccupiedByShip(String symbol){
@@ -18,7 +30,7 @@ public class Cell {
 
     public void setMissed(){
         this.isBombed = true;
-        this.symbol = ansiGreen + "O" + ansiReset;
+        this.symbol = missedSymbol;
     }
 
     public boolean getIsBombed(){

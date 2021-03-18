@@ -13,7 +13,7 @@ public class Game {
     private Board machineBoardForPlayer = new Board();  // keeps track of the player's attack on the machine - for player
     private Board playerBoardForMachine = new Board();  // keeps track of machine's attack on the player - for machine
     private DisplayBoard display = new DisplayBoard(this.boardLength, this.boardLength);
-    private int[] shipSize = {2};  // the array of ship sizes
+    private int[] shipSize = {2,2,3,4,5};  // the array of ship sizes
     private int playerShipCompartmentLeft = IntStream.of(shipSize).sum();
     private int machineShipCompartmentLeft = IntStream.of(shipSize).sum();
     private String turn;
@@ -34,8 +34,8 @@ public class Game {
         this.updateAndDisplay(playerBoardForPlayer, machineBoardForPlayer);
         // ask Machine to set ships
         this.askMachineSetShips();
-        System.out.println("The machine's board: ");  // remove
-        this.updateAndDisplay(machineBoardForMachine, playerBoardForMachine);  // remove
+//        System.out.println("The machine's board: ");
+//        this.updateAndDisplay(machineBoardForMachine, playerBoardForMachine);
         // recap
         this.gameRecap();
         // play game
@@ -74,6 +74,18 @@ public class Game {
 
     public void gameRecap(){
         // to reiterate the symbols and ship numbers
+        String s1 = String.format("As a recap, your symbol is %s", player.getSymbol());
+        String s2 = String.format("If you/ opponent hit a ship, %s will appear on the board.", playerBoardForPlayer.boardGetBombedSymbol());
+        String s3 = String.format("If you/ opponent missed, %s will appear on the board.", playerBoardForPlayer.boardGetMissedSymbol());
+        String s4 = String.format("Fire away!");
+        String[] stringArray = {s1, s2, s3, s4};
+        try {
+            for (String s : stringArray) {
+                printStringWithDelay(s, 1500);
+            }
+        } catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void askPlayerSymbol(Scanner sc){
@@ -162,8 +174,8 @@ public class Game {
             // machine's turn
             this.gameAskMachineMove();
             updateAndDisplay(playerBoardForPlayer, machineBoardForPlayer);  // show player the situation
-            System.out.println("The machine's board: Machine own vs Player");  // remove
-            updateAndDisplay(machineBoardForMachine, playerBoardForMachine);  // remove
+//            System.out.println("The machine's board: Machine own vs Player");
+//            updateAndDisplay(machineBoardForMachine, playerBoardForMachine);
             if (checkWinningCondition() == true){
                 break;
             }
@@ -176,23 +188,27 @@ public class Game {
         // ask player for the move and update the board
         boolean validMove = false;
         int x, y;
-        while(validMove==false){
-            x = player.askPlayerAttackRow(sc);  // these methods will tell player if their input are out of bound
-            y = player.askPlayerAttackCol(sc);
-            if(machineBoardForMachine.isValidMove(x,y) == true){  // if the move is valid, ie if the coord has not been selected before
-                // if hit then set hit
-                if(machineBoardForMachine.boardGetIsHit(x,y) == true){  // if the coord has ship and not used yet
-                    System.out.println("You've hit a ship!");
-                    this.machineShipCompartmentLeft -= 1;
-                    machineBoardForPlayer.boardSetHit(x,y);  // set the machine display board for player
-                    machineBoardForMachine.boardSetHit(x,y);  // set the machine board coord
-                } else {  // if missed then set missed
-                    System.out.println("You've missed.");
-                    machineBoardForPlayer.boardSetMissed(x,y);  // update display for player
-                    machineBoardForMachine.boardSetMissed(x,y);  // update machine's own board
+        try {
+            while (validMove == false) {
+                x = player.askPlayerAttackRow(sc);  // these methods will tell player if their input are out of bound
+                y = player.askPlayerAttackCol(sc);
+                if (machineBoardForMachine.isValidMove(x, y) == true) {  // if the move is valid, ie if the coord has not been selected before
+                    // if hit then set hit
+                    if (machineBoardForMachine.boardGetIsHit(x, y) == true) {  // if the coord has ship and not used yet
+                        printStringWithDelay("You've hit a ship!", 1500);
+                        this.machineShipCompartmentLeft -= 1;
+                        machineBoardForPlayer.boardSetHit(x, y);  // set the machine display board for player
+                        machineBoardForMachine.boardSetHit(x, y);  // set the machine board coord
+                    } else {  // if missed then set missed
+                        printStringWithDelay("You've missed.", 1500);
+                        machineBoardForPlayer.boardSetMissed(x, y);  // update display for player
+                        machineBoardForMachine.boardSetMissed(x, y);  // update machine's own board
+                    }
+                    validMove = true;
                 }
-                validMove = true;
             }
+        } catch (InterruptedException e){
+            System.out.println(e.getMessage());
         }
     }
 
@@ -209,13 +225,13 @@ public class Game {
                 if (playerBoardForPlayer.isValidMove(x, y) == true) {  // if it's a valid move on the player's board
                     if (playerBoardForPlayer.boardGetIsHit(x, y) == true) {
                         String s = String.format("The Machine has hit your ship at row %d, column %d.\n", x, y);
-                        printStringWithDelay(s, 1000);
+                        printStringWithDelay(s, 2000);
                         this.playerShipCompartmentLeft -= 1;
                         playerBoardForMachine.boardSetHit(x, y);  // update the machine side display
                         playerBoardForPlayer.boardSetHit(x, y);  // update the player's own
                     } else {  // if the machine's attack is a miss
                         String s = String.format("The Machine's attack at row %d, column %d has been a miss.\n", x, y);
-                        printStringWithDelay(s, 1000);
+                        printStringWithDelay(s, 2000);
                         playerBoardForPlayer.boardSetMissed(x, y);  // update player
                         playerBoardForMachine.boardSetMissed(x, y);  // update machine display
                     }
